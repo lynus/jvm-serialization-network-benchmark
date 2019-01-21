@@ -1,0 +1,7 @@
+fork from https://github.com/eishay/jvm-serializers
+This repo compares ser/deser with network transfer cost. 
+More specifically, I'm interested in how Infiniband network impacts the overall performance.
+Warning: Orignal project is really a mess, and So is this one...
+
+Depandency: the underlying RDMA library is DisNi and DaRPC. The lib directory contains all jar files that required. But I recommand you compile the disni native library, and specify its path in my-run.sh.
+
