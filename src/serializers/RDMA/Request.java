@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 public class Request implements DaRPCMessage {
     static final int WARMUP_CMD = 1;
     static final int TRANS_RDMA= 2;
+    static final int DULL_CMD = 3;
     private static final int SIZE = 28;
     public int cmd;
     public int serializer;
@@ -33,10 +34,15 @@ public class Request implements DaRPCMessage {
         this.bufferSize = size;
         this.objNumber = objNumber;
     }
+    public void dull() {
+        cmd = DULL_CMD;
+    }
 
     @Override
     public void update(ByteBuffer buffer) {
         cmd = buffer.getInt();
+        if (cmd == DULL_CMD)
+            return;
         serializer = buffer.getInt();
         address = buffer.getLong();
         if (cmd == TRANS_RDMA) {
@@ -49,6 +55,8 @@ public class Request implements DaRPCMessage {
     @Override
     public int write(ByteBuffer buffer) {
         buffer.putInt(cmd);
+        if (cmd == DULL_CMD)
+            return SIZE;
         buffer.putInt(serializer);
         buffer.putLong(address);
         if (cmd == TRANS_RDMA) {

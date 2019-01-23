@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import static serializers.RDMA.Request.DULL_CMD;
 import static serializers.RDMA.Request.TRANS_RDMA;
 import static serializers.RDMA.Request.WARMUP_CMD;
 
@@ -56,7 +57,9 @@ public class RPCService extends Protocol implements DaRPCService<Request, Respon
         if (ep == null) {
             throw new IOException("no data ep established");
         }
-        if (request.cmd == WARMUP_CMD) {
+        if (request.cmd == DULL_CMD) {
+            event.triggerResponse();
+        } else if (request.cmd == WARMUP_CMD) {
             response.cmd = WARMUP_CMD;
             int hash = request.serializer;
             String foundName = null;

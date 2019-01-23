@@ -18,7 +18,7 @@ iter=1000
 raw_result_dir="results/rdma/`hostname`/raw"
 
 if [ $# -lt 2 ]; then
-  echo "my-run.sh client/server"
+  echo "my-run.sh client/server host [serializer]"
   exit 1
 fi
 if [ $1 == server ]; then

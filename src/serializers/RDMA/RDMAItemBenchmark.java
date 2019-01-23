@@ -3,7 +3,9 @@ package serializers.RDMA;
 import com.ibm.darpc.*;
 import serializers.*;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +36,11 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
             System.exit(1);
         }
         runBenchmark(args, Create, mySerialize, networkDeser);
+        try {
+            runRPCDelayTest(args);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         client.close();
     }
 
@@ -136,6 +143,20 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
             }
         }
         return values;
+    }
+
+    private void runRPCDelayTest(String[] args) throws IOException {
+        System.err.println("test dull rpc round delay");
+        Params params = new Params();
+        findParameters(args, params);
+        long start = System.nanoTime();
+        for (int i = 0; i < params.iterations; i++) {
+             DaRPCFuture future = client.sendDull();
+             while (!future.isDone()) {}
+        }
+        long end = System.nanoTime();
+        DecimalFormat format = new DecimalFormat("#.000");
+        System.err.println(format.format((end - start) / params.iterations)+ " ns");
     }
 
 }

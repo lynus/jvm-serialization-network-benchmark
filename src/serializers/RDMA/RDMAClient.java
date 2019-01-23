@@ -96,4 +96,9 @@ public class RDMAClient {
         request.mkTRANS_RDMA(serName, addr, rkey, size, iterations);
         return stream.request(request, response, false);
     }
+
+    public DaRPCFuture<Request, Response> sendDull() throws IOException {
+        request.dull();
+        return stream.request(request, response,false);
+    }
 }
