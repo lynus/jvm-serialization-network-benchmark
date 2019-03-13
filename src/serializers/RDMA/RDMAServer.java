@@ -8,8 +8,9 @@ import serializers.BenchmarkRunner;
 import serializers.TestGroup;
 import serializers.TestGroups;
 
-import javax.xml.crypto.Data;
 import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class RDMAServer extends BenchmarkRunner {
@@ -21,13 +22,15 @@ public class RDMAServer extends BenchmarkRunner {
         findParameters(args, params);
 
         ArrayBlockingQueue<DataEndpoint> eps = new ArrayBlockingQueue<>(10);
-        DataEndpointAcceptor acceptor = new DataEndpointAcceptor(params, eps);
+        ArrayBlockingQueue<SocketChannel> scs = new ArrayBlockingQueue<>(10);
+
+        DataEndpointAcceptor acceptor = new DataEndpointAcceptor(params, eps, scs);
         acceptor.start();
 
         TestGroup<?> bootstrapGroup = findGroupForTestData(groups, params);
         Object testData = loadTestData(bootstrapGroup, params);
 
-        RPCService rpcService = new RPCService(groups, testData, eps);
+        RPCService rpcService = new RPCService(groups, testData, eps, scs);
         long[] affinity = new long[]{1};
 
         DaRPCServerGroup<Request, Response> rpcServerGroup = DaRPCServerGroup.createServerGroup(rpcService, affinity,
@@ -52,10 +55,12 @@ public class RDMAServer extends BenchmarkRunner {
     private class DataEndpointAcceptor extends Thread {
         private Params params;
         private ArrayBlockingQueue<DataEndpoint> eps;
+        private ArrayBlockingQueue<SocketChannel> scs;
 
-        public DataEndpointAcceptor(Params params, ArrayBlockingQueue<DataEndpoint> eps) {
+        public DataEndpointAcceptor(Params params, ArrayBlockingQueue<DataEndpoint> eps, ArrayBlockingQueue<SocketChannel> scs) {
             this.params = params;
             this.eps = eps;
+            this.scs = scs;
         }
         @Override
         public void run() {
@@ -65,12 +70,21 @@ public class RDMAServer extends BenchmarkRunner {
                 endpointGroup.init(new DataEndpoint.DataEndpointFactory(endpointGroup));
                 RdmaServerEndpoint<DataEndpoint> serverEp = endpointGroup.createServerEndpoint();
                 serverEp.bind(new InetSocketAddress(params.host, 2020), 10);
+                ServerSocketChannel serverChannel = ServerSocketChannel.open();
+                serverChannel.socket().bind(new InetSocketAddress(params.host, 2121), 10);
                 while (true) {
                     DataEndpoint ep = serverEp.accept();
                     if (eps.size() > 0)
                         if (!eps.take().isClosed())
                             System.err.println("ONLY one data connect a time!");
                     eps.add(ep);
+
+                    SocketChannel channel = serverChannel.accept();
+                    if (scs.size() > 0)
+//                        if (scs.take().isConnected())
+//                            System.err.println("ONLY one data socket connect a time!");
+                        scs.take();
+                    scs.add(channel);
                 }
             } catch (Exception exp) {
                 exp.printStackTrace();

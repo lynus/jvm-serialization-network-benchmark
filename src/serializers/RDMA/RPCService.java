@@ -8,6 +8,7 @@ import serializers.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static serializers.RDMA.Request.DULL_CMD;
@@ -18,12 +19,14 @@ public class RPCService extends Protocol implements DaRPCService<Request, Respon
     private TestGroups groups;
     private Object testData;
     private ArrayBlockingQueue<DataEndpoint> eps;
+    private ArrayBlockingQueue<SocketChannel> scs;
     private TestGroup.Entry entry;
     private ByteBuffer buffer = ByteBuffer.allocateDirect(SerTestCase.SIZE);
-    public RPCService(TestGroups groups, Object testData, ArrayBlockingQueue eps) {
+    public RPCService(TestGroups groups, Object testData, ArrayBlockingQueue eps, ArrayBlockingQueue scs) {
         this.groups = groups;
         this.testData = testData;
         this.eps = eps;
+        this.scs = scs;
     }
     protected TestCase Create = new TestCase()
     {
@@ -54,6 +57,7 @@ public class RPCService extends Protocol implements DaRPCService<Request, Respon
         Request request = event.getReceiveMessage();
         Response response = event.getSendMessage();
         DataEndpoint ep = eps.peek();
+        SocketChannel channel = scs.peek();
         if (ep == null) {
             throw new IOException("no data ep established");
         }
@@ -92,7 +96,15 @@ public class RPCService extends Protocol implements DaRPCService<Request, Respon
             event.triggerResponse();
         } else if (request.cmd == TRANS_RDMA) {
             response.cmd = TRANS_RDMA;
-            //TODO: handle rdma transfer
+            int readBytes = 0;
+            buffer.clear();
+            while (readBytes < request.bufferSize) {
+                readBytes += channel.read(buffer);
+            }
+	    buffer.clear();
+            buffer.putInt(1);
+            buffer.flip();
+            channel.write(buffer);  //send socket ack
             long start = System.nanoTime();
             ep.postRead(request.address, request.rkey, request.bufferSize);
             try {

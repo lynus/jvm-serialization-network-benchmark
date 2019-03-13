@@ -71,8 +71,8 @@ public final class TestCaseRunner<J>
     public double[] runWithTimeMeasurement_2results(int timeMillis, TestCase tc, int iterations) throws Exception {
         long start = System.currentTimeMillis();
         int count = 0;
-        double[] ret = new double[2];
-        double networkTotal = 0, deserTotal = 0;
+        double[] ret = new double[3];
+        double networkTotal = 0, deserTotal = 0, socketTotal = 0;
         SerTestCase.NetworkAndDeserTestCase test = (SerTestCase.NetworkAndDeserTestCase)tc;
         System.err.println("test-time "+timeMillis+" iteration "+iterations);
 
@@ -82,12 +82,15 @@ public final class TestCaseRunner<J>
             measureVals2[count] = test.deserTime;
             networkTotal += test.networkTime;
             deserTotal += test.deserTime;
+            socketTotal += test.socketTime;
             count++;
         }
         double networkAvg = networkTotal / count;
         double deserAvg = deserTotal / count;
+        double socketAvg = socketTotal / count;
         ret[0] = networkAvg;
         ret[1] = deserAvg;
+        ret[2] = socketAvg;
 
         Arrays.sort(measurementVals,0,count);
         System.err.println("-----------------------------------------------------------------------------");

@@ -11,9 +11,9 @@ cp=$cpgen:$cplib:./build/bytecode/main:lib
 
 javaopt="$mem -cp $cp -Djava.library.path=$libdisni"
 
-testTime=10000
-warmupTime=15000
-iter=1000
+testTime=100
+warmupTime=150
+iter=10
 
 raw_result_dir="results/rdma/`hostname`/raw"
 

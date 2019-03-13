@@ -7,6 +7,7 @@ import com.ibm.disni.verbs.IbvMr;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 public class RDMAClient {
     private static DaRPCClientGroup<Request, Response> rpcClientGroup;
@@ -16,6 +17,7 @@ public class RDMAClient {
     private Response response;
     private static RdmaActiveEndpointGroup<DataEndpoint> dataGroup;
     private DataEndpoint dataEp;
+    private SocketChannel socket;
     static {
         try {
             rpcClientGroup = DaRPCClientGroup.createClientGroup(new Protocol(), 10, 0, 1, 1);
@@ -28,6 +30,7 @@ public class RDMAClient {
 
     public void connect(String host) throws Exception {
         rpcEp = rpcClientGroup.createEndpoint();
+        socket = SocketChannel.open();
         InetSocketAddress address = new InetSocketAddress(host, 1919);
         while (true) {
             try {
@@ -40,8 +43,8 @@ public class RDMAClient {
                     Thread.sleep(5000);
                 } catch (InterruptedException _ex) {
                 }
-//                rpcEp.close();
-//                rpcEp = rpcClientGroup.createEndpoint();
+                rpcEp.close();
+                rpcEp = rpcClientGroup.createEndpoint();
             }
         }
 
@@ -61,10 +64,11 @@ public class RDMAClient {
                     Thread.sleep(5000);
                 } catch (InterruptedException _ex) {
                 }
-//                dataEp.close();
-//                dataEp = dataGroup.createEndpoint();
+                dataEp.close();
+                dataEp = dataGroup.createEndpoint();
             }
         }
+        socket.connect(new InetSocketAddress(host, 2121));
     }
 
     public void close() {
@@ -73,6 +77,7 @@ public class RDMAClient {
             rpcClientGroup.close();
             dataEp.close();
             dataGroup.close();
+            socket.close();
         } catch (Exception ex) {
         }
     }
@@ -97,6 +102,26 @@ public class RDMAClient {
         return stream.request(request, response, false);
     }
 
+    public void socketTransfer(ByteBuffer buffer) {
+        buffer.flip();
+        try {
+            while(buffer.hasRemaining())
+                socket.write(buffer);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+   
+    public int waitAck(ByteBuffer buffer) {
+	int ret = -1;
+        buffer.clear();
+        try {
+            ret = socket.read(buffer);
+	} catch (IOException ex) {
+            ex.printStackTrace();
+        }
+	return ret;
+    }
     public DaRPCFuture<Request, Response> sendDull() throws IOException {
         request.dull();
         return stream.request(request, response,false);

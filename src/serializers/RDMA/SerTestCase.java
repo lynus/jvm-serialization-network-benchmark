@@ -14,9 +14,11 @@ public class SerTestCase extends TestCase {
     public long address;
     public static final int SIZE = 4 << 20;
     private ByteBuffer buffer;
+    private ByteBuffer ackBuffer;
 
     public void init(RDMAClient client)  {
         buffer = ByteBuffer.allocateDirect(SIZE);
+        ackBuffer = ByteBuffer.allocateDirect(16);
         try {
             IbvMr mr = client.registerBuffer(buffer);
             lkey = mr.getLkey();
@@ -47,7 +49,7 @@ public class SerTestCase extends TestCase {
     }
 
     public class NetworkAndDeserTestCase extends TestCase {
-        public double networkTime, deserTime;
+        public double networkTime, deserTime, socketTime;
         private RDMAClient client;
 
         public NetworkAndDeserTestCase(RDMAClient client) {
@@ -56,6 +58,10 @@ public class SerTestCase extends TestCase {
         @Override
         public <J> double run(Transformer<J, Object> transformer, Serializer<Object> serializer, J value, int iterations) throws Exception {
             DaRPCFuture<Request, Response> future = client.sendTransfer(rkey, address, buffer.position(), iterations, serializer.getName());
+            long start = System.nanoTime();
+            client.socketTransfer(buffer);
+	    client.waitAck(ackBuffer);
+            socketTime = (double)(System.nanoTime() - start) / iterations;
             while (!future.isDone()) {
             }
             Response resp = future.getReceiveMessage();

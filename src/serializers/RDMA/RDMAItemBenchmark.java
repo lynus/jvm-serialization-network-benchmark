@@ -88,7 +88,7 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
             System.out.println("[done]");
         }
 
-        System.out.printf("%-34s %6s %7s %7s %7s %7s %6s %5s\n",
+        System.out.printf("%-34s %6s %7s %7s %7s %7s %6s %5s %7s\n",
                 params.printChart ? "\npre." : "",
                 "create",
                 "ser",
@@ -96,7 +96,8 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
                 "network",
                 "total",
                 "size",
-                "+dfl");
+                "+dfl",
+                "socket");
         EnumMap<measurements, Map<String, Double>> values = new EnumMap<measurements, Map<String, Double>>(measurements.class);
         for (measurements m : measurements.values())
             values.put(m, new HashMap<String, Double>());
@@ -116,12 +117,12 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
                         testDeserialize, params.iterations);
                 double timeNetwok = times[0];
                 double timeDeserialize = times[1];
-
+                double timeSocket = times[2];
                 double totalTime = timeSerialize + timeDeserialize + timeNetwok;
                 byte[] array = serializeForSize(entry.transformer, entry.serializer, value);
                 byte[] compressDeflate = compressDeflate(array);
 
-                System.out.printf("%-34s %6.0f %7.0f %7.0f %7.0f %7.0f %6d %5d\n",
+                System.out.printf("%-34s %6.0f %7.0f %7.0f %7.0f %7.0f %6d %5d %7.0f\n",
                         name,
                         timeCreate,
                         timeSerialize,
@@ -129,7 +130,10 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
                         timeNetwok,
                         totalTime,
                         array.length,
-                        compressDeflate.length);
+                        compressDeflate.length,
+                        timeSocket
+                        );
+
 
                 addValue(values, name, timeCreate, timeSerialize,
                         timeDeserialize, totalTime,
