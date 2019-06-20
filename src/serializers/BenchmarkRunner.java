@@ -43,7 +43,7 @@ public class BenchmarkRunner extends MediaItemBenchmark
         //Hessian.register(groups);
 
         //class file version
-        //Kryo.register(groups);
+        Kryo.register(groups);
         //serializers/BenchmarkRunner.java:44
         //FastSerialization.register(groups);
         Wobly.register(groups);
