@@ -9,6 +9,7 @@ clz=serializers.BenchmarkRunner
 cpgen=$(cat build/gen-cp)
 cplib=$(cat build/lib-cp)
 sep=':'
+java='/home/lynus/java_staff/JikesRVM/dist/production_x86_64_m64-linux/rvm'
 # cygwin
 case "`uname`" in
 	CYGWIN*) sep=';' ;;
@@ -29,7 +30,7 @@ if [ $# -eq 0 ]; then
     if [ -e "$raw_result_dir" ]; then
         rm -r "$raw_result_dir"
     fi
-    sentence=$(java -cp $cp serializers.BenchmarkExporter) # just grab all serializers
+    sentence=$($java -cp $cp serializers.BenchmarkExporter) # just grab all serializers
 elif [ $# -eq 1 ]; then
     sentence=$1
 else
@@ -46,7 +47,7 @@ do
     file=$word-result.txt
     file="$raw_result_dir"/${file//\//-}  # change '/' to '-'
     echo $word > $file
-    java $mem -cp $cp $clz -iterations=$iter -warmup-time=$warmupTime -testRunMillis=$testTime -include=$word data/media.1.json >> $file || code=$? 
+    $java $mem -cp $cp $clz -iterations=$iter -warmup-time=$warmupTime -testRunMillis=$testTime -include=$word data/media.1.json >> $file || code=$?
     if [[ $code -ne 0 ]]; then
         echo "ERROR: exit code $code"
         exit $code

@@ -21,8 +21,8 @@ public class RDMAServer extends BenchmarkRunner {
         Params params = new Params();
         findParameters(args, params);
 
-        ArrayBlockingQueue<DataEndpoint> eps = new ArrayBlockingQueue<>(10);
-        ArrayBlockingQueue<SocketChannel> scs = new ArrayBlockingQueue<>(10);
+        ArrayBlockingQueue<DataEndpoint> eps = new ArrayBlockingQueue<DataEndpoint>(10);
+        ArrayBlockingQueue<SocketChannel> scs = new ArrayBlockingQueue<SocketChannel>(10);
 
         DataEndpointAcceptor acceptor = new DataEndpointAcceptor(params, eps, scs);
         acceptor.start();

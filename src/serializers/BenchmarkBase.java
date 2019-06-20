@@ -277,6 +277,7 @@ abstract class BenchmarkBase
     {
         TestGroup<?> bootstrapGroup = findGroupForTestData(groups, params);
         Object testData = loadTestData(bootstrapGroup, params);
+        System.err.println("loaded test data: " + testData.toString());
         Iterable<TestGroup.Entry<Object,Object>> matchingEntries
             = findApplicableTests(groups, params, bootstrapGroup);
 
@@ -543,6 +544,7 @@ abstract class BenchmarkBase
     {
         Object specialInput;
         String name = serializer.getName();
+        System.err.println("check serializer: " +name);
         try {
             specialInput = transformer.forward(value);
         }

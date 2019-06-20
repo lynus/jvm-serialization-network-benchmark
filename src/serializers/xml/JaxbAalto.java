@@ -20,7 +20,7 @@ public class JaxbAalto<T> extends Serializer<T>
     public static void register(TestGroups groups)
     {
         groups.media.add(JavaBuiltIn.mediaTransformer,
-                new JaxbAalto<>("xml/JAXB/aalto", MediaContent.class,
+                new JaxbAalto<MediaContent>("xml/JAXB/aalto", MediaContent.class,
                         new InputFactoryImpl(), new OutputFactoryImpl()),
                 new SerFeatures(
                         SerFormat.XML,

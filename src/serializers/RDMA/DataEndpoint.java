@@ -12,7 +12,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class DataEndpoint extends RdmaActiveEndpoint {
     private IbvMr mr;
-    private ArrayBlockingQueue<IbvWC> events = new ArrayBlockingQueue<>(10);
+    private ArrayBlockingQueue<IbvWC> events = new ArrayBlockingQueue<IbvWC>(10);
 
     private SVCPostSend sendSVC;
 
@@ -29,7 +29,7 @@ public class DataEndpoint extends RdmaActiveEndpoint {
         sgeList.add(sge);
         wr.setSg_list(sgeList);
 
-        LinkedList<IbvSendWR> wrList = new LinkedList<>();
+        LinkedList<IbvSendWR> wrList = new LinkedList<IbvSendWR>();
         wrList.add(wr);
         return this.postSend(wrList);
     }

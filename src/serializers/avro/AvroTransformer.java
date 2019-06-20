@@ -41,7 +41,7 @@ public class AvroTransformer extends MediaTransformer<MediaContent>
     private Media forwardMedia(data.media.Media media)
     {
         Integer bitRate = media.hasBitrate ? media.bitrate : null;
-        List<CharSequence> persons = new ArrayList<>(media.persons.size());
+        List<CharSequence> persons = new ArrayList<CharSequence>(media.persons.size());
         for (int i = 0; i < media.persons.size(); i++) {
             persons.add(i, media.persons.get(i));
         }

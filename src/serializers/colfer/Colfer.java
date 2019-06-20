@@ -89,7 +89,7 @@ public class Colfer {
 
 		@Override
 		public data.media.MediaContent reverse(MediaContent src) {
-			List<data.media.Image> images = new ArrayList<>(src.images.length);
+			List<data.media.Image> images = new ArrayList<data.media.Image>(src.images.length);
 			for (Image image : src.images) {
 				images.add(reverseImage(image));
 			}

@@ -138,7 +138,7 @@ public class FlatBuffers {
 		}
 
 	    private List<String> reversePersons(Media media) {
-		    List<String> result = new ArrayList<>(media.personsLength());
+		    List<String> result = new ArrayList<String>(media.personsLength());
 		    for(int i = 0; i < media.personsLength(); i++) {
 			    result.add(media.persons(i));
 		    }

@@ -196,7 +196,7 @@ public class DataKernelSerializer {
 	};
 
 	private static List<DImage> forwardImages(List<Image> images) {
-		List<DImage> list = new ArrayList<>(images.size());
+		List<DImage> list = new ArrayList<DImage>(images.size());
 		for (Image image : images) {
 			list.add(forwardImage(image));
 		}
@@ -215,7 +215,7 @@ public class DataKernelSerializer {
 	}
 
 	private static List<Image> reverseImages(List<DImage> DImages) {
-		List<Image> list = new ArrayList<>(DImages.size());
+		List<Image> list = new ArrayList<Image>(DImages.size());
 		for (DImage DImage : DImages) {
 			list.add(reverseImage(DImage));
 		}

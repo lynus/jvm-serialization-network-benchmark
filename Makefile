@@ -14,7 +14,7 @@
 
 # Need 'javac' version 5 or greater.
 JavaC ?= javac
-JavaC_Opt := -Xlint:unchecked
+JavaC_Opt := -Xlint:unchecked -target 6 -source 6
 
 empty :=
 space := $(empty) $(empty)

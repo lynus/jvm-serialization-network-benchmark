@@ -24,7 +24,7 @@ public class DSLJson {
         private final boolean asArray;
 
         DSLJsonSerializer(boolean asArray) {
-            DslJson<Object> dslJson = new DslJson<>(Settings.withRuntime().allowArrayFormat(asArray).includeServiceLoader());
+            DslJson<Object> dslJson = new DslJson<Object>(Settings.withRuntime().allowArrayFormat(asArray).includeServiceLoader());
             this.writer = dslJson.newWriter();
             this.reader = dslJson.newReader();
             this.encoder = dslJson.tryFindWriter(MediaContent.class);

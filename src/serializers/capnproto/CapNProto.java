@@ -1,5 +1,6 @@
 package serializers.capnproto;
 
+import data.media.Image;
 import org.capnproto.*;
 
 import serializers.*;
@@ -106,7 +107,7 @@ public class CapNProto {
 		public data.media.MediaContent reverse(Mediacontent.MediaContent.Reader reader) {
 			data.media.Media media = reverseMedia(reader.getMedia());
 			StructList.Reader<Mediacontent.Image.Reader> images = reader.getImages();
-			List<data.media.Image> list = new ArrayList<>(images.size());
+			List<data.media.Image> list = new ArrayList<Image>(images.size());
 			for (int i = 0; i < images.size(); i++) {
 				list.add(reverseImage(images.get(i)));
 			}
@@ -140,7 +141,7 @@ public class CapNProto {
 		}
 
 	    private List<String> reversePersons(TextList.Reader reader) {
-		    List<String> result = new ArrayList<>(reader.size());
+		    List<String> result = new ArrayList<String>(reader.size());
 		    for(int i = 0; i < reader.size(); i++) {
 			    result.add(reader.get(i).toString());
 		    }

@@ -14,7 +14,7 @@ public class Jaxb<T> extends Serializer<T>
     public static void register(TestGroups groups)
     {
         groups.media.add(JavaBuiltIn.mediaTransformer,
-                new Jaxb<>("xml/JAXB", MediaContent.class),
+                new Jaxb<MediaContent>("xml/JAXB", MediaContent.class),
                 new SerFeatures(
                         SerFormat.XML,
                         SerGraph.FULL_GRAPH,

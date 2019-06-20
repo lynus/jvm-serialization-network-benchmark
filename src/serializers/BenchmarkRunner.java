@@ -32,23 +32,31 @@ public class BenchmarkRunner extends MediaItemBenchmark
     protected void addTests(TestGroups groups)
     {
         // Binary Formats; language-specific ones
-        JavaBuiltIn.register(groups);
+        //not correct
+//        JavaBuiltIn.register(groups);
         JavaManual.register(groups);
         Stephenerialization.register(groups);
 
 //        Scala.register(groups);
 // hessian, kryo and wobly are Java object serializations
-        Hessian.register(groups);
-        Kryo.register(groups);
-        FastSerialization.register(groups);
+        //not correct
+        //Hessian.register(groups);
+
+        //class file version
+        //Kryo.register(groups);
+        //serializers/BenchmarkRunner.java:44
+        //FastSerialization.register(groups);
         Wobly.register(groups);
-        JBossSerialization.register(groups);
-        JBossMarshalling.register(groups);
+        //not correct
+//        JBossSerialization.register(groups);
+        //Bad permission name:
+        //JBossMarshalling.register(groups);
 // 06-May-2013, tatu: Fails on basic Java7, mismatch with Unsafe; commented out
 //        Obser.register(groups);
 
         // Binary formats, generic: protobuf, thrift, avro, CKS, msgpack, CBOR
-        Protobuf.register(groups);
+        //not correct
+//        Protobuf.register(groups);
         // 16-May-2012, Nate: As discussed on mailing list, removed ActiveMQProtobuf as
         // its lazy deserialization isn't comparable to other serializers.
         // ActiveMQProtobuf.register(groups);
@@ -60,21 +68,27 @@ public class BenchmarkRunner extends MediaItemBenchmark
         //    uses arrays, presumes ordering (and implied schema thereby) -- not inter-operable with most non-Java MsgPack
         //    usage, and basically seems to optimize for benchmarks instead of reflecting real usage.
         MsgPack.register(groups);
-        JacksonCBORDatabind.register(groups);
-        JacksonProtobufDatabind.register(groups);
+        //class file version 51
+        //JacksonCBORDatabind.register(groups);
+        // version 51
+        //JacksonProtobufDatabind.register(groups);
 
         // JSON
         JacksonJsonManual.register(groups);
-        JacksonJsonDatabind.register(groups);
+        //version 51
+//        JacksonJsonDatabind.register(groups);
         JacksonJrDatabind.register(groups);
         // 01-Oct-2014, tatu: not 100% sure this is still needed, but left just in case
 //        JacksonJsonTree.register(groups);
-        JavaxJsonTreeGlassfish.register(groups);
-        JavaxJsonStreamGlassfish.register(groups);
+        //not correct
+//        JavaxJsonTreeGlassfish.register(groups);
+        //not correct
+//        JavaxJsonStreamGlassfish.register(groups);
         JsonTwoLattes.register(groups);
         ProtostuffJson.register(groups);
 
-        ProtobufJson.register(groups);
+        //not correct
+//        ProtobufJson.register(groups);
         JsonGsonManual.register(groups);
         JsonGsonTree.register(groups);
         JsonGsonDatabind.register(groups);
@@ -82,8 +96,10 @@ public class BenchmarkRunner extends MediaItemBenchmark
         FlexjsonDatabind.register(groups);
 
         JsonLibJsonDatabind.register(groups);
-        FastJSONDatabind.register(groups);
-        FastJSONArrayDatabind.register(groups);
+        //not correct
+//        FastJSONDatabind.register(groups);
+        //not correct
+//        FastJSONArrayDatabind.register(groups);
         JsonSimpleWithContentHandler.register(groups);
 //        JsonSimpleManualTree.register(groups);
         JsonSmartManualTree.register(groups);
@@ -96,8 +112,10 @@ public class BenchmarkRunner extends MediaItemBenchmark
 
         // Then JSON-like binary variants
         // Smile is 1-to-1 binary JSON serialization
-        JacksonSmileManual.register(groups);
-        JacksonSmileDatabind.register(groups);
+        //version 51
+//        JacksonSmileManual.register(groups);
+        //version 51
+//        JacksonSmileDatabind.register(groups);
 
 	// 06-May-2013, tatu: Unfortunately there is a version conflict
         //    here too -- commenting out, to let David fix it
@@ -106,11 +124,11 @@ public class BenchmarkRunner extends MediaItemBenchmark
         MongoDB.register(groups);
 
         // XML-based formats; first textual XML
-        JaxbAalto.register(groups);
-        Jaxb.register(groups);
+//        JaxbAalto.register(groups);
+//        Jaxb.register(groups);
         XmlStax.register(groups, true, true, false); // woodstox/aalto/-
-        XmlXStream.register(groups);
-        JacksonXmlDatabind.register(groups);
+//        XmlXStream.register(groups);
+//        JacksonXmlDatabind.register(groups);
         XmlJavolution.register(groups);
 
         // Then binary XML; Fast Infoset, EXI
@@ -120,15 +138,19 @@ public class BenchmarkRunner extends MediaItemBenchmark
         // Other things...
 
         // Jackson databind with Afterburner; add-on module that uses bytecode gen for speed
-        JacksonWithAfterburner.registerAll(groups);
+        //version 51
+//        JacksonWithAfterburner.registerAll(groups);
 
         // Jackson's column-oriented variants for formats that usually use key/value notation
-        JacksonWithColumnsDatabind.registerAll(groups);
-
-        serializers.dsljson.DSLJson.register(groups);
-        FlatBuffers.register(groups);
-        CapNProto.register(groups);
+//        JacksonWithColumnsDatabind.registerAll(groups);
+        //version 52
+//        serializers.dsljson.DSLJson.register(groups);
+        //version 52
+//        FlatBuffers.register(groups);
+        //version 51
+//        CapNProto.register(groups);
         Colfer.register(groups);
-        DataKernelSerializer.register(groups);
+        //version 51
+//        DataKernelSerializer.register(groups);
     }
 }
