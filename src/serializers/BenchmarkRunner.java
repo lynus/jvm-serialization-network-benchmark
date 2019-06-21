@@ -55,8 +55,7 @@ public class BenchmarkRunner extends MediaItemBenchmark
 //        Obser.register(groups);
 
         // Binary formats, generic: protobuf, thrift, avro, CKS, msgpack, CBOR
-        //not correct
-//        Protobuf.register(groups);
+        Protobuf.register(groups);
         // 16-May-2012, Nate: As discussed on mailing list, removed ActiveMQProtobuf as
         // its lazy deserialization isn't comparable to other serializers.
         // ActiveMQProtobuf.register(groups);
@@ -146,11 +145,10 @@ public class BenchmarkRunner extends MediaItemBenchmark
         //version 52
 //        serializers.dsljson.DSLJson.register(groups);
         //version 52
-//        FlatBuffers.register(groups);
+        FlatBuffers.register(groups);
         //version 51
 //        CapNProto.register(groups);
         Colfer.register(groups);
-        //version 51
-//        DataKernelSerializer.register(groups);
+        DataKernelSerializer.register(groups);
     }
 }
