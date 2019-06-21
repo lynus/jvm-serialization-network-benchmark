@@ -277,7 +277,6 @@ abstract class BenchmarkBase
     {
         TestGroup<?> bootstrapGroup = findGroupForTestData(groups, params);
         Object testData = loadTestData(bootstrapGroup, params);
-        System.err.println("loaded test data: " + testData.toString());
         Iterable<TestGroup.Entry<Object,Object>> matchingEntries
             = findApplicableTests(groups, params, bootstrapGroup);
 
