@@ -4,4 +4,4 @@ More specifically, I'm interested in how Infiniband network impacts the overall 
 Warning: Orignal project is really a mess, and So is this one...
 
 Depandency: the underlying RDMA library is DisNi and DaRPC. The lib directory contains all jar files that required. But I recommand you compile the disni native library, and specify its path in my-run.sh.
-
+This java6 branch is used for benchmarking using Jikes RVM since it's only implementing java6 spec. Most top performant serializers are back-ported to java6, and works on Jikes RVM.
