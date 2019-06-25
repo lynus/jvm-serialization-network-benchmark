@@ -33,7 +33,7 @@ public class BenchmarkRunner extends MediaItemBenchmark
     {
         // Binary Formats; language-specific ones
         //not correct
-        JavaBuiltIn.register(groups);
+//        JavaBuiltIn.register(groups);
         JavaManual.register(groups);
         Stephenerialization.register(groups);
 
