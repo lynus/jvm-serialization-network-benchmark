@@ -65,7 +65,7 @@ public final class TestCaseRunner<J>
         DecimalFormat format = new DecimalFormat("#.000");
         System.err.println("average:"+ format.format(avg) +" ns deviation:"+format.format(avg-measurementVals[count/2])+" ns");
         System.err.println("-----------------------------------------------------------------------------");
-        return avg;
+        return measurementVals[0];
     }
 
     public double[] runWithTimeMeasurement_2results(int timeMillis, TestCase tc, int iterations) throws Exception {
@@ -85,11 +85,13 @@ public final class TestCaseRunner<J>
             socketTotal += test.socketTime;
             count++;
         }
+        Arrays.sort(measureVals2, 0, count);
         double networkAvg = networkTotal / count;
         double deserAvg = deserTotal / count;
+        double minDeser = measureVals2[0];
         double socketAvg = socketTotal / count;
         ret[0] = networkAvg;
-        ret[1] = deserAvg;
+        ret[1] = minDeser;
         ret[2] = socketAvg;
 
         Arrays.sort(measurementVals,0,count);

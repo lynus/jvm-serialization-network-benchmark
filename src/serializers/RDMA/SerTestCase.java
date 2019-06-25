@@ -36,9 +36,45 @@ public class SerTestCase extends TestCase {
     public <J> double run(Transformer<J, Object> transformer, Serializer<Object> serializer, J value, int iterations) throws Exception {
         buffer.clear();
         long start = System.nanoTime();
-        for (int i = 0; i < iterations; i++) {
+        for (int i = 0; i < iterations; i+=10) {
             Object input = transformer.forward(value);
             byte[] array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
+            buffer.putInt(array.length);
+            buffer.put(array);
+            input = transformer.forward(value);
+            array = serializer.serialize(input);
             buffer.putInt(array.length);
             buffer.put(array);
         }
