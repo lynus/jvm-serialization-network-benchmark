@@ -60,32 +60,30 @@ public class RDMAItemBenchmark extends BenchmarkRunner {
              Params params, Iterable<TestGroup.Entry<J, Object>> groups, J value,
              TestCase testCreate, TestCase testSerialize, TestCase testDeserialize) throws Exception {
         // Check correctness first.
-        System.out.println("Checking correctness...");
+        System.err.println("Checking correctness...");
         for (TestGroup.Entry<J,Object> entry : groups)
         {
             checkCorrectness(errors, entry.transformer, entry.serializer, value);
         }
-        System.out.println("[done]");
+        System.err.println("[done]");
 
         if (params.prewarm) {
-            System.out.print("Pre-warmup...");
+            System.err.print("Pre-warmup...");
             for (TestGroup.Entry<J,Object> entry : groups)
             {
                 TestCaseRunner<J> runner = new TestCaseRunner<J>(entry.transformer, entry.serializer, value);
                 String name = entry.serializer.getName();
-                System.out.print(" " + name);
+                System.err.println(" " + name);
 
                 DaRPCFuture<Request, Response> future = client.sendWarmup(entry.serializer.getName(), params.warmupTime);
-
                 warmTest(runner, params.warmupTime, testCreate);
                 warmTest(runner, params.warmupTime, testSerialize);
-
                 while (!future.isDone()) { }
                 if (future.getReceiveMessage().status == Response.FAILED)
                     throw new Exception("remote warm up failed");
             }
-            System.out.println();
-            System.out.println("[done]");
+            System.err.println();
+            System.err.println("[done]");
         }
 
         System.out.printf("%-34s %6s %7s %7s %7s %7s %6s %5s %7s\n",
