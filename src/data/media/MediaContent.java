@@ -2,6 +2,7 @@ package data.media;
 
 import com.dslplatform.json.CompiledJson;
 import com.dslplatform.json.JsonAttribute;
+import org.vmmagic.pragma.RDMA;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -12,6 +13,7 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @CompiledJson(formats = {CompiledJson.Format.ARRAY, CompiledJson.Format.OBJECT})
+@RDMA
 public class MediaContent implements java.io.Serializable
 {
 	public Media media;

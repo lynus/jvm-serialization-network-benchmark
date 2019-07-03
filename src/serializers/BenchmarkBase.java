@@ -52,7 +52,7 @@ abstract class BenchmarkBase
         public Boolean filterIsInclude;
         public Set<String> filterStrings;
         public boolean printChart = false;
-
+        public int loop = 1;
         // Information in input data file:
         public String dataFileName;
         public String dataType; // from first part of file name (comma-separated)
@@ -160,6 +160,22 @@ abstract class BenchmarkBase
                     System.exit(1);
                 }
                 if (params.iterations < 1) {
+                    System.err.println("Invalid value for \"iterations\" option: \"" + value + "\"");
+                    System.exit(1);
+                }
+            }
+            else if (option.equals("loops")) {
+                if (value == null) {
+                    System.err.println("The \"iterations\" option requires a value.");
+                    System.exit(1);
+                }
+                try {
+                    params.loop= Integer.parseInt(value);
+                } catch (NumberFormatException ex) {
+                    System.err.println("Invalid value for \"iterations\" option: \"" + value + "\"");
+                    System.exit(1);
+                }
+                if (params.loop< 1) {
                     System.err.println("Invalid value for \"iterations\" option: \"" + value + "\"");
                     System.exit(1);
                 }
