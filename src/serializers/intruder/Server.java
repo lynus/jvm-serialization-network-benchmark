@@ -2,6 +2,7 @@ package serializers.intruder;
 
 import data.media.MediaContent;
 import intruder.*;
+import org.jikesrvm.runtime.Magic;
 import serializers.BenchmarkRunner;
 
 import java.net.InetAddress;
@@ -9,6 +10,7 @@ import java.net.InetSocketAddress;
 
 public class Server extends BenchmarkRunner {
     public static void main(String args[]) {
+        Utils.disableLog();
         RegisterRdmaClass.registerType();
         try {
             new Server().run(args);
@@ -27,18 +29,26 @@ public class Server extends BenchmarkRunner {
         System.err.println("get here! stream id: " + inStream.getConnectionId());
         Integer loop = (Integer) inStream.readObject();
         System.err.println("get loop: " + loop);
+        int _loop = loop.intValue();
         Integer iteration = (Integer) inStream.readObject();
+        int _iteration = iteration.intValue();
         MediaContent obj = null;
-        long total = 0L;
-        for  (int i = 0; i < loop; i++) {
-            long start = System.nanoTime();
-            System.err.println("loop: " + i);
-            for (int j = 0; j < iteration; j++) {
+        long start, end;
+        long begin = System.nanoTime();
+        for  (int i = 0; i < _loop; i++) {
+            inStream.spin();
+            start = System.nanoTime();
+            for (int j = 0; j < _iteration; j++) {
                 obj = (MediaContent) inStream.readObject();
             }
-            total += System.nanoTime() - start;
-            //inStream.setFinish();
+            end = System.nanoTime();
+//            System.gc();
+            inStream.setFinish();
+            System.err.println("finish loop #" + i + "avg time: " + (end - start)/_iteration);
         }
-        System.out.println("sever average time: " + (double)total/loop/iteration);
+        System.out.println("sever average time: " + ((double)(System.nanoTime() - begin))/_loop/_iteration);
+        Thread.sleep(1000);
+        System.out.println(obj.toString());
+        System.exit(0);
     }
 }

@@ -37,21 +37,32 @@ public class Client extends BenchmarkRunner {
         TestGroups groups = new TestGroups();
         TestGroup<?> group = findGroupForTestData(groups, params);
         Object testData = loadTestData(group, params);
+        System.err.println(testData.toString());
         long total = 0L;
         Integer loop = params.loop;
+        System.out.println("loop: " + loop);
         outStream.writeObject(loop);
         outStream.writeObject(new Integer(params.iterations));
         outStream.flush();
+        long start, end;
+        long begin = System.nanoTime();
         for (int i = 0; i < loop; i++) {
-            long start = System.nanoTime();
+            start = System.nanoTime();
             for (int j = 0; j < params.iterations; j++)
                 outStream.writeObject(testData);
-//            outStream.flush();
-            //outStream.waitRemoteFinish();
-            total += System.nanoTime() - start;
-            System.err.println("finishi loop #" + i);
+            outStream.flush();
+            long _t1 = System.nanoTime();
+            outStream.notifyReady();
+//            end = System.nanoTime();
+            outStream.waitRemoteFinish();
+            long _t2 = System.nanoTime();
+            end = System.nanoTime();
+            System.err.println("finishi loop #" + i + " aver time: " + (end - start)/params.iterations +
+                     " wait time: " + (_t2 - _t1)/params.iterations);
         }
         outStream.flush();
-        System.out.println("average time: " + (double)total/loop/params.iterations);
+        System.out.println("average time: " + ((double)(System.nanoTime() - begin))/(loop)/params.iterations);
+        Thread.sleep(10000);
+        System.exit(0);
     }
 }
